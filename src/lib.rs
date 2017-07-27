@@ -230,7 +230,6 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                 }
             }
             114 => {    //"r" Drop.
-                println!("{}",stack.len());
                 if let Err(n) = stack.pop() { return Err((pc, n)); }
 
             }
