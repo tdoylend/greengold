@@ -161,7 +161,11 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                 value *= 10;
                 value += (instruction as i64) - 48;
             },
-            112 => {    //Debug. Print type of variable, and value.
+            100 => {    //"d". Duplicate.
+                if let Err(n) = stack.dup() { return Err((pc, n)); }
+
+            },
+            112 => {    //"p". Debug. Print type of variable, and value.
 
                 let value = stack.pop();
                 
