@@ -271,6 +271,14 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                 value *= 10;
                 value += (instruction as i64) - 48;
             },
+            59 => {     //Semicolon. Return
+                let home = match rstack.pop() {
+                    Some(n) => n,
+                    None    => { return Err((pc,Error::ReturnStackUnderflow)); }
+                };
+
+                pc = home; 
+            }
             98  => {    //"b". Jump to address.
 
                 let value = stack.pop();
@@ -343,6 +351,24 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                 let condition = match data {
                     Data::Float(n) => if n != 0.0 {true} else {false},
                     Data::Int(n)   => if n != 0 {true} else {false}
+                };
+
+                if condition { pc = address; }
+            },
+            122 => {    //"z" Jump if zero.
+                let address = stack.pop();
+
+                let address = match address { Err(n) => {return Err((pc,n));}, Ok(n) => {n} };
+
+                let data = stack.pop();
+
+                let data = match data { Err(n) => {return Err((pc,n));}, Ok(n) => {n} };
+
+                let address = match address { Data::Float(_) => {return Err((pc, Error::TypeMismatch));}, Data::Int(n) => n as usize };
+
+                let condition = match data {
+                    Data::Float(n) => if n == 0.0 {true} else {false},
+                    Data::Int(n)   => if n == 0 {true} else {false}
                 };
 
                 if condition { pc = address; }
