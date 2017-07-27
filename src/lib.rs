@@ -8,11 +8,11 @@ pub enum Error {
 
 impl Error {
     pub fn to_string(&self) -> &'static str {
-        match ref self {
-            StackUnderflow => "Stack Underflow",
-            TypeMismatch   => "Type Mismatch",
-            InvalidInstruction => "Invalid Instruction",
-            ReturnStackUnderflow => "Return Without Call"
+        match self {
+            &Error::StackUnderflow => {return "Stack Underflow";},
+            &Error::TypeMismatch   => {return "Type Mismatch";},
+            &Error::InvalidInstruction => {return "Invalid Instruction";},
+            &Error::ReturnStackUnderflow => {return "Return Without Call";}
         }
     }
 }
