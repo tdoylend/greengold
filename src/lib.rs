@@ -159,7 +159,19 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                 value += (instruction as i64) - 48;
             },
             112 => {    //Debug. Print type of variable, and value.
+
+                let value = stack.pop();
                 
+                let value = match value {
+                    Err(n) => { return Err((pc,n));},
+                    Ok(n)  => { n }
+                };
+
+                match value {
+                    Data::Int(n) => println!("Int:{}",n),
+                    Data::Float(n) => println!("Float:{}",n)
+                }
+
 
             }
 
