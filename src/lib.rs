@@ -122,7 +122,7 @@ impl Stack {
 
 }
 
-pub fn run(code: Vec<u8>, mut stack: Stack, mut pc: usize) -> Result<(),(usize,Error)> {
+pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize,Error)> {
     ///Run bytecode.
 
     let mut rstack: Vec<usize> = Vec::new();
