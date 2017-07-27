@@ -241,6 +241,7 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
             }
 
             _ => {
+                println!("WE WERE HERE");
                 return Err((pc,Error::InvalidInstruction));
             }
         }
