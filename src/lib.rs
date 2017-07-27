@@ -151,6 +151,9 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
             39 => {     //Single quote. Push constant as integer.
                 stack.push(Data::Int(value));
             },
+            43 => {     //Plus sign. Add.
+                if let Err(n) = stack.add() { return Err((pc, n)); }
+            }
             46 => {     //Period. Increase the divider by three orders of magnitude.
                 divider *= 1000.0;
             },
