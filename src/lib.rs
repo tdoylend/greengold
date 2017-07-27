@@ -39,6 +39,9 @@ impl Stack {
             stack: Vec::new()
         }
     }
+
+    pub fn len(&self) -> usize {self.stack.len()}
+
     pub fn push(&mut self, value: Data) {
         self.stack.push(value);
     }
