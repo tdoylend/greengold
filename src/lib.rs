@@ -153,6 +153,70 @@ impl Stack {
         Ok(())
     }
 
+    pub fn sub(&mut self) -> Result<(),Error> {
+        let values = self.pop_two(); 
+
+        let values = match values {
+            Err(n) => { return Err(n);},
+            Ok(n)  => { n }
+        };
+
+        match values {
+            Pair::Int(x,y) => {self.push(Data::Int(y-x));}
+            Pair::Float(x,y) => { self.push(Data::Float(y-x));}
+        }
+
+        Ok(())
+    }
+
+    pub fn mul(&mut self) -> Result<(),Error> {
+        let values = self.pop_two(); 
+
+        let values = match values {
+            Err(n) => { return Err(n);},
+            Ok(n)  => { n }
+        };
+
+        match values {
+            Pair::Int(x,y) => {self.push(Data::Int(y*x));}
+            Pair::Float(x,y) => { self.push(Data::Float(y*x));}
+        }
+
+        Ok(())
+    }
+
+    pub fn div(&mut self) -> Result<(),Error> {
+        let values = self.pop_two(); 
+
+        let values = match values {
+            Err(n) => { return Err(n);},
+            Ok(n)  => { n }
+        };
+
+        match values {
+            Pair::Int(x,y) => {self.push(Data::Int(y/x));}
+            Pair::Float(x,y) => { self.push(Data::Float(y/x));}
+        }
+
+        Ok(())
+    }
+
+    pub fn modulus(&mut self) -> Result<(),Error> {
+        let values = self.pop_two(); 
+
+        let values = match values {
+            Err(n) => { return Err(n);},
+            Ok(n)  => { n }
+        };
+
+        match values {
+            Pair::Int(x,y) => {self.push(Data::Int(y%x));}
+            Pair::Float(x,y) => { self.push(Data::Float(y%x));}
+        }
+
+        Ok(())
+    }
+
 }
 
 pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize,Error)> {
@@ -182,14 +246,26 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
             36 => {     //Dollar sign. Invert constant.
                 value = -value;
             },
+            37 => {     //Percent sign. Modulus.
+                if let Err(n) = stack.modulus() { return Err((pc, n)); }
+            }
             39 => {     //Single quote. Push constant as integer.
                 stack.push(Data::Int(value));
             },
+            42 => {     //Asterisk. Multiply.
+                if let Err(n) = stack.mul() { return Err((pc, n)); }
+            },
             43 => {     //Plus sign. Add.
                 if let Err(n) = stack.add() { return Err((pc, n)); }
-            }
+            },
+            45 => {     //Minus sign. Subtract.
+                if let Err(n) = stack.sub() { return Err((pc, n)); }
+            },
             46 => {     //Period. Increase the divider by three orders of magnitude.
                 divider *= 1000.0;
+            },
+            47 => {     //Slash. Divide.
+                if let Err(n) = stack.div() { return Err((pc, n)); }
             },
             48...57 => { //Numeral.
                 value *= 10;
