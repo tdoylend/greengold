@@ -287,6 +287,21 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                     }
                 }
             }
+            99 => {     //"c". Call address
+                let value = stack.pop();
+                
+                let value = match value {
+                    Err(n) => { return Err((pc,n));},
+                    Ok(n)  => { n }
+                };
+
+                match value {
+                    Data::Float(_) => { return Err((pc, Error::TypeMismatch)); }
+                    Data::Int(n) => {
+                        rstack.push(n as usize);
+                    }
+                }
+            }
             100 => {    //"d". Duplicate.
                 if let Err(n) = stack.dup() { return Err((pc, n)); }
 
