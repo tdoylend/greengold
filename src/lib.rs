@@ -9,10 +9,10 @@ pub enum Error {
 impl Error {
     pub fn to_string(&self) -> &'static str {
         match self {
-            StackUnderflow => "Stack Underflow",
-            TypeMismatch   => "Type Mismatch",
-            InvalidInstruction => "Invalid Instruction",
-            ReturnStackUnderflow => "Return Without Call"
+            Error::StackUnderflow => "Stack Underflow",
+            Error::TypeMismatch   => "Type Mismatch",
+            Error::InvalidInstruction => "Invalid Instruction",
+            Error::ReturnStackUnderflow => "Return Without Call"
         }
     }
 }
