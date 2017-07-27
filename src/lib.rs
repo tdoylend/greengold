@@ -6,6 +6,17 @@ pub enum Error {
     ReturnStackUnderflow,
 }
 
+impl Error {
+    pub fn to_string(&self) -> &'static str {
+        match self {
+            StackUnderflow => "Stack Underflow",
+            TypeMismatch   => "Type Mismatch",
+            InvalidInstruction => "Invalid Instruction",
+            ReturnStackUnderflow => "Return Without Call"
+        }
+    }
+}
+
 #[derive(Debug, Copy, Clone)]
 pub enum Data {
     Int(i64),
