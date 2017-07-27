@@ -286,7 +286,7 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                         pc = n as usize;
                     }
                 }
-            }
+            },
             99 => {     //"c". Call address
                 let value = stack.pop();
                 
@@ -301,7 +301,7 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                         rstack.push(n as usize);
                     }
                 }
-            }
+            },
             100 => {    //"d". Duplicate.
                 if let Err(n) = stack.dup() { return Err((pc, n)); }
 
@@ -319,20 +319,38 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                     Data::Int(n) => println!("Int:{}",n),
                     Data::Float(n) => println!("Float:{}",n)
                 }
-            }
+            },
             114 => {    //"r" Drop.
                 if let Err(n) = stack.pop() { return Err((pc, n)); }
 
-            }
+            },
 
             115 => {    //"s" Swap.
                 if let Err(n) = stack.swap() { return Err((pc, n)); }
 
             }
+            121 => {    //"y" Jump if non-zero.
+                let address = stack.pop();
 
+                let address = match address { Err(n) => {return Err((pc,n));}, Ok(n) => {n} };
+
+                let data = stack.pop();
+
+                let data = match data { Err(n) => {return Err((pc,n));}, Ok(n) => {n} };
+
+                let address = match address { Data::Float(_) => {return Err((pc, Error::TypeMismatch));}, Data::Int(n) => n as usize };
+
+                let condition = match data {
+                    Data::Float(n) => if n != 0.0 {true} else {false},
+                    Data::Int(n)   => if n != 0 {true} else {false}
+                };
+
+                if condition { pc = address; }
+            },
             _ => {
                 return Err((pc,Error::InvalidInstruction));
-            }
+            },
+
         }
     }
 
