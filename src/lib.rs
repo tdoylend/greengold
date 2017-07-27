@@ -8,7 +8,7 @@ pub enum Error {
 
 impl Error {
     pub fn to_string(&self) -> &'static str {
-        match self {
+        match ref self {
             StackUnderflow => "Stack Underflow",
             TypeMismatch   => "Type Mismatch",
             InvalidInstruction => "Invalid Instruction",
