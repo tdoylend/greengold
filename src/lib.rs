@@ -329,7 +329,7 @@ pub fn run<T: AtomExtender>(
                 match value {
                     Data::Float(_) => { return Err((pc, Error::TypeMismatch)); }
                     Data::Int(n) => {
-                        let val = memory[(n as usize) % stack.len()];
+                        let val = memory[(n as usize) % memory.len()];
                         stack.push(val);
                     }
                 }
@@ -351,7 +351,7 @@ pub fn run<T: AtomExtender>(
                 match address {
                     Data::Float(_) => { return Err((pc, Error::TypeMismatch)); }
                     Data::Int(n) => {
-                        let addr = (n as usize) % stack.len();
+                        let addr = (n as usize) % memory.len();
                         memory[addr] = value;
                     }
                 }
