@@ -252,7 +252,13 @@ impl Stack {
 
 }
 
-pub fn run<T: AtomExtender>(code: &Vec<u8>, stack: &mut Stack, mut pc: usize, mut extender: T) -> Result<(),(usize,Error)> {
+pub fn run<T: AtomExtender>(
+            code: &Vec<u8>,
+            stack: &mut Stack,
+            mut pc: usize,
+            mut extender: T,
+            memory: &mut Vec<Data>
+            ) -> Result<(),(usize,Error)> {
     ///Run bytecode.
 
     let mut rstack: Vec<usize> = Vec::new();
@@ -311,6 +317,44 @@ pub fn run<T: AtomExtender>(code: &Vec<u8>, stack: &mut Stack, mut pc: usize, mu
                 };
 
                 pc = home; 
+            },
+            82 => {     //"R" Read from memory
+                let value = stack.pop();
+                
+                let value = match value {
+                    Err(n) => { return Err((pc,n));},
+                    Ok(n)  => { n }
+                };
+
+                match value {
+                    Data::Float(_) => { return Err((pc, Error::TypeMismatch)); }
+                    Data::Int(n) => {
+                        let val = memory[(n as usize) % stack.len()];
+                        stack.push(val);
+                    }
+                }
+            },
+            87 => {
+                let address = stack.pop();
+                let value = stack.pop();
+
+                let address = match address {
+                    Err(n) => { return Err((pc,n));},
+                    Ok(n)  => { n }
+                };
+
+                let value = match value {
+                    Err(n) => { return Err((pc,n));},
+                    Ok(n)  => { n }
+                };
+
+                match address {
+                    Data::Float(_) => { return Err((pc, Error::TypeMismatch)); }
+                    Data::Int(n) => {
+                        let addr = (n as usize) % stack.len();
+                        memory[addr] = value;
+                    }
+                }
             },
             98  => {    //"b". Jump to address.
                 //println!("{}",stack.len());
