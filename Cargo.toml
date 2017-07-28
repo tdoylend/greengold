@@ -3,6 +3,6 @@ name = "greengold"
 version = "0.1.0"
 authors = ["tdoylend <tmdoylend@gmail.com>"]
 description = "A Forth bytecode interpreter library."
-license = "MIT License"
+license = "MIT"
 
 [dependencies]
