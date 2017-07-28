@@ -12,7 +12,7 @@ pub trait AtomExtender {
 
 pub struct NullExtender {}
 impl AtomExtender for NullExtender {
-    fn atom(&mut self, atom: u8, stack: &mut Stack) -> Result<(),Error> {
+    fn atom(&mut self, _: u8, _: &mut Stack) -> Result<(),Error> {
         Err(Error::InvalidInstruction)
     }
 }
