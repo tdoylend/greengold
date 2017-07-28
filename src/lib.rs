@@ -137,6 +137,27 @@ impl Stack {
         Ok(())
     }
 
+    pub fn over(&mut self) -> Result<(), Error> {
+        let x = self.pop();
+        let y = self.pop();
+
+        let x = match x {
+            Err(n) => { return Err(n);},
+            Ok(n)  => { n }
+        };
+
+        let y = match y {
+            Err(n) => { return Err(n);},
+            Ok(n)  => { n }
+        };
+
+        self.push(y);
+        self.push(x);
+        self.push(y);
+
+        Ok(())
+    }
+
     pub fn add(&mut self) -> Result<(),Error> {
         let values = self.pop_two(); 
 
@@ -338,6 +359,9 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
             115 => {    //"s" Swap.
                 if let Err(n) = stack.swap() { return Err((pc, n)); }
 
+            }
+            118 => {    //"v" Over.
+                if let Err(n) = stack.over() { return Err((pc, n)); }
             }
             121 => {    //"y" Jump if non-zero.
                 let address = stack.pop();
