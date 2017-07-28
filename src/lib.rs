@@ -6,6 +6,18 @@ pub enum Error {
     ReturnStackUnderflow,
 }
 
+pub trait AtomExtender {
+    fn atom(&mut self, u8, &mut Stack) -> Result<(),Error>;
+}
+
+pub struct NullExtender {}
+impl AtomExtender for NullExtender {
+    fn atom(&mut self, atom: u8, stack: &mut Stack) -> Result<(),Error> {
+        Err(Error::InvalidInstruction)
+    }
+}
+
+
 impl Error {
     pub fn to_string(&self) -> &'static str {
         match self {
@@ -240,7 +252,7 @@ impl Stack {
 
 }
 
-pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize,Error)> {
+pub fn run<T: AtomExtender>(code: &Vec<u8>, stack: &mut Stack, mut pc: usize, mut extender: T) -> Result<(),(usize,Error)> {
     ///Run bytecode.
 
     let mut rstack: Vec<usize> = Vec::new();
@@ -400,7 +412,7 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                 if condition { pc = address; }
             },
             _ => {
-                return Err((pc,Error::InvalidInstruction));
+                if let Err(n) = extender.atom(instruction, stack) { return Err((pc, n)); }
             },
 
         }
