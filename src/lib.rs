@@ -280,7 +280,7 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                 pc = home; 
             },
             98  => {    //"b". Jump to address.
-
+                println!("{}",stack.len());
                 let value = stack.pop();
                 
                 let value = match value {
