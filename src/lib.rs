@@ -280,7 +280,7 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                 pc = home; 
             },
             98  => {    //"b". Jump to address.
-                println!("{}",stack.len());
+                //println!("{}",stack.len());
                 let value = stack.pop();
                 
                 let value = match value {
@@ -296,7 +296,7 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                 }
             },
             99 => {     //"c". Call address
-                println!("{}",stack.len());
+                //println!("{}",stack.len());
                 let value = stack.pop();
                 
                 let value = match value {
@@ -307,7 +307,8 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                 match value {
                     Data::Float(_) => { return Err((pc, Error::TypeMismatch)); }
                     Data::Int(n) => {
-                        rstack.push(n as usize);
+                        rstack.push(pc);
+                        pc = n as usize;
                     }
                 }
             },
