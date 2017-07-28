@@ -296,6 +296,7 @@ pub fn run(code: &Vec<u8>, stack: &mut Stack, mut pc: usize) -> Result<(),(usize
                 }
             },
             99 => {     //"c". Call address
+                println!("{}",stack.len());
                 let value = stack.pop();
                 
                 let value = match value {
