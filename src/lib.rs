@@ -260,13 +260,9 @@ impl Stack {
 pub fn run<T: AtomExtender>(
             ///Code to run.
             code: &Vec<u8>,
-            ///Stack to operate with.
             stack: &mut Stack,
-            ///Initial value for Program Counter.
             mut pc: usize,
-            ///Extender to implement additional atoms.
             mut extender: T,
-            ///Memory.
             memory: &mut Vec<Data>
             ) -> Result<(),(usize,Error)> {
 
