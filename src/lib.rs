@@ -3,7 +3,6 @@ pub enum Error {
     StackUnderflow,
     TypeMismatch,
     InvalidInstruction,
-    ReturnStackUnderflow,
 }
 
 pub trait AtomExtender {
@@ -24,7 +23,6 @@ impl Error {
             &Error::StackUnderflow => {return "Stack Underflow";},
             &Error::TypeMismatch   => {return "Type Mismatch";},
             &Error::InvalidInstruction => {return "Invalid Instruction";},
-            &Error::ReturnStackUnderflow => {return "Return Without Call";}
         }
     }
 }
@@ -252,14 +250,25 @@ impl Stack {
 
 }
 
+/// Run some code. The stack and memory parameters can be non-empty;
+/// this is how data is passed to a Forth function. Since they are
+/// only borrowed return values can be extracted from them.
+///
+/// PC should be set to the beginning of one of the words in memory.
+/// A return without a branch triggers a full return, no longer a Return Stack Underflow.
+
 pub fn run<T: AtomExtender>(
+            ///Code to run.
             code: &Vec<u8>,
+            ///Stack to operate with.
             stack: &mut Stack,
+            ///Initial value for Program Counter.
             mut pc: usize,
+            ///Extender to implement additional atoms.
             mut extender: T,
+            ///Memory.
             memory: &mut Vec<Data>
             ) -> Result<(),(usize,Error)> {
-    ///Run bytecode.
 
     let mut rstack: Vec<usize> = Vec::new();
 
@@ -313,7 +322,7 @@ pub fn run<T: AtomExtender>(
             59 => {     //Semicolon. Return
                 let home = match rstack.pop() {
                     Some(n) => n,
-                    None    => { return Err((pc,Error::ReturnStackUnderflow)); }
+                    None    => { return Ok(()) }
                 };
 
                 pc = home; 
