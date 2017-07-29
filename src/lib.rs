@@ -258,7 +258,6 @@ impl Stack {
 /// A return without a branch triggers a full return, no longer a Return Stack Underflow.
 
 pub fn run<T: AtomExtender>(
-            ///Code to run.
             code: &Vec<u8>,
             stack: &mut Stack,
             mut pc: usize,
