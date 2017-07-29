@@ -27,11 +27,15 @@ impl Error {
     }
 }
 
+///Represents a piece of Forth data, either an int or a float.
+
 #[derive(Debug, Copy, Clone)]
 pub enum Data {
     Int(i64),
     Float(f64),
 }
+
+///Represents a homogeneous pair of Data.
 
 #[derive(Debug, Copy, Clone)]
 pub enum Pair {
@@ -39,23 +43,31 @@ pub enum Pair {
     Float(f64,f64),
 }
 
+///The Forth stack.
+
 pub struct Stack {
     stack: Vec<Data>,
 }
 
 impl Stack {
+    ///Initialize an empty stack.
     pub fn new() -> Stack {
         Stack {
             stack: Vec::new()
         }
     }
 
+
+    ///Get the length of the stack.
     pub fn len(&self) -> usize {self.stack.len()}
 
+
+    ///Push an item to the stack.
     pub fn push(&mut self, value: Data) {
         self.stack.push(value);
     }
 
+    ///Pop an item from the stack.
     pub fn pop(&mut self) -> Result<Data,Error> {
         match self.stack.pop() {
             Some(n) => Ok(n),
@@ -63,6 +75,7 @@ impl Stack {
         }
     }
 
+    ///Pop two items of the same type.
     pub fn pop_two(&mut self) -> Result<Pair,Error> {
         let a = self.stack.pop();
         let b = self.stack.pop();
@@ -81,6 +94,7 @@ impl Stack {
         }
     }
 
+    ///Cast TOS to int. Int to int is valid.
     pub fn cast_to_int(&mut self) -> Result<(),Error> {
         let value = self.pop();
 
@@ -97,6 +111,7 @@ impl Stack {
         return Ok(());
     }
 
+    ///Cast TOS to float. Float to float is valid.
     pub fn cast_to_float(&mut self) -> Result<(),Error> {
         let value = self.pop();
 
@@ -113,6 +128,7 @@ impl Stack {
         return Ok(());
     }
 
+    ///Duplicate TOS.
     pub fn dup(&mut self) -> Result<(),Error> {
         let value = self.pop();
 
@@ -127,6 +143,7 @@ impl Stack {
         Ok(())
     }
 
+    ///Swap TOS with NOS.
     pub fn swap(&mut self) -> Result<(), Error> {
         let x = self.pop();
         let y = self.pop();
@@ -147,6 +164,7 @@ impl Stack {
         Ok(())
     }
 
+    ///Duplicate NOS, placing duplicate value above TOS.
     pub fn over(&mut self) -> Result<(), Error> {
         let x = self.pop();
         let y = self.pop();
