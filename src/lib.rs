@@ -27,17 +27,17 @@ impl Error {
     }
 }
 
-///Represents a piece of Forth data, either an int or a float.
+
 
 #[derive(Debug, Copy, Clone)]
+///Represents a piece of Forth data, either an int or a float.
 pub enum Data {
     Int(i64),
     Float(f64),
 }
 
-///Represents a homogeneous pair of Data.
-
 #[derive(Debug, Copy, Clone)]
+///Represents a homogeneous pair of Data.
 pub enum Pair {
     Int(i64,i64),
     Float(f64,f64),
