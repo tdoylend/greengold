@@ -1,3 +1,15 @@
+use std::fs::File;
+use std::io::Read;
+
+pub fn load_module(path: &'static str) -> Vec<u8> {
+    let mut file = File::open(path).unwrap();
+    let mut program: Vec<u8> = Vec::new();
+    
+    file.read_to_end(&mut program).unwrap();
+
+    program
+}
+
 #[derive(Debug, Copy, Clone)]
 pub enum Error {
     StackUnderflow,
@@ -44,7 +56,6 @@ pub enum Pair {
 }
 
 ///The Forth stack.
-
 pub struct Stack {
     stack: Vec<Data>,
 }
